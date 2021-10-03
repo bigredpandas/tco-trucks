@@ -63,7 +63,7 @@ m_r_cost = {}
 
 #sidebar
 st.sidebar.title('Pre-Settings')
-selected_options = st.sidebar.multiselect("Which technologies would you like to compare", ["ICEV","BEV","FCEV","OC-BEV"],["BEV", "FCEV"], format_func=lambda x: options.get(x))
+selected_options = st.sidebar.multiselect("Which technologies would you like to compare", ["ICEV","BEV","FCEV","OC-BEV"],["BEV", "FCEV", "ICEV"], format_func=lambda x: options.get(x))
 num_options = len(selected_options)
 
 st.sidebar.checkbox("Expert mode")
@@ -81,15 +81,16 @@ st.sidebar.write("Models and assumptions for long-haul trucks (40 t) are based o
 container = st.container()
 container.title('TCO-Calculator for different Green Trucking Technologies')
 
+
 with st.expander("Policy framework", expanded=True):
     co2_price = st.slider("CO2 price [€/CO2-equ. t]", 0, 300, co2_price_l.loc[co2_price_l["Year"] == selected_year, "Cost [€/t]"].item(), 5)
 
-    capex_sub = st.slider("CAPEX subsidy for extra costs in comparison with diesel trucks [% of extra CAPEX subsidized]", 0, 100, 80, 5)/100
+    capex_sub = st.slider("CAPEX subsidy for extra costs in comparison with diesel trucks [% of extra CAPEX subsidized]", 0, 100, 0, 5)/100
     cols = st.columns(num_options)
     for i in range(num_options):
         with cols[i]:
             st.subheader(selected_options[i])
-            road_charge = st.number_input("Toll for infrastructure, noise and air pollution [€/km]", float(0), 0.5, toll_cost.loc[ (toll_cost["Vehicle"] == selected_options[i]) & (toll_cost["Year"] == selected_year), "Cost [€/km]"].item(), 0.01, key="fsdp"+str(i))
+            toll.loc[ (toll["Vehicle"] == selected_options[i]) & (toll["Year"] == selected_year), "Cost [€/km]"] = st.number_input("Toll for infrastructure, noise and air pollution [€/km]", float(0), 0.5, toll_cost.loc[ (toll_cost["Vehicle"] == selected_options[i]) & (toll_cost["Year"] == selected_year), "Cost [€/km]"].item(), 0.01, key="fsdp"+str(i))
 
 with st.expander("Vehicle Cost"):
     num_years = st.slider("Period under observation [years]", 1, 5, 5, 1)
@@ -143,8 +144,11 @@ with st.expander("Energy Cost"):
 
 
 with st.expander("Infrastructure Cost"):
-    col1, col2, col3 = st.columns(3)
-    st.write("test")
+    cols = st.columns(num_options)
+    for i in range(num_options):
+        with cols[i]:
+            st.subheader(selected_options[i])
+            cost.loc[ (cost["Vehicle"] == selected_options[i]) & (cost["Cost type"] == "Infrastructure") & (cost["Year"] == selected_year), "Cost [€]"] = st.number_input("Annual infrastructure cost [t€]", float(0), float(1000), vehicle_cost.loc[ (vehicle_cost["Vehicle"] == selected_options[i]) & (vehicle_cost["Cost type"] == "Infrastructure") & (vehicle_cost["Year"] == selected_year), "Cost [€]"].item()/1000, float(1), key="vpgg"+str(i))*1000
 
 # Toll cost calculation
 for i in range(num_options):
@@ -173,13 +177,20 @@ for i in range(len(buffer)):
     else:
         cost.loc[(cost["Vehicle"] == buffer[i]) & (cost["Cost type"] == "Infrastructure") & (cost["Year"] == selected_year), "Cost [€]"] = cost.loc[(cost["Vehicle"] == buffer[i]) & (cost["Cost type"] == "Infrastructure") & (cost["Year"] == selected_year), "Cost [€]"].item() + cost.loc[(cost["Vehicle"] == buffer[i]) & (cost["Cost type"] == "Subsidy") & (cost["Year"] == selected_year), "Cost [€]"].item()
 
+#calculate percentage
+cost_e = cost.copy().groupby(["Vehicle", "Cost type","Year","Recurring annual cost","Class"]).agg({"Cost [€]":"sum"})
+cost_e["Share of TCO"] = cost_e.groupby(["Vehicle","Year","Class"]).apply(lambda x:
+                                                 100 * x / float(x.sum())).values
+cost_e["Share of TCO"] = cost_e["Share of TCO"].astype(int).apply(str) + "%"
+cost_e.reset_index(inplace=True)
 
 
+cost = cost_e
+cost = cost.loc[(cost["Year"] == selected_year) & (cost["Vehicle"].isin(selected_options))]
+fig = px.bar(cost, x="Vehicle", y="Cost [€]",  color="Cost type",  hover_name="Vehicle", hover_data= ["Share of TCO"],color_discrete_sequence=px.colors.qualitative.T10, title="Total cost of ownership in first "+str(num_years)+" year use period")
 
-
-fig = px.bar(cost.loc[(vehicle_cost["Year"] == selected_year) & (cost["Vehicle"].isin(selected_options))], x="Vehicle", y="Cost [€]", color="Cost type")
 fig.update_xaxes(categoryorder='array', categoryarray= selected_options)
-fig.update_layout(font_size = 15)
+fig.update_layout(font_size = 15, title_x=0.5)
 
 # out of order displaying with containers
 container.write(fig)
