@@ -49,6 +49,7 @@ cost = vehicle_cost.copy()
 en_cost = energy_cost.copy()
 toll = toll_cost.copy()
 
+
 options = {
     "ICEV" : "Internal combustion engine w/ Diesel (ICEV)",
     "BEV" : "Battery-electric (BEV)",
@@ -70,6 +71,8 @@ num_options = len(selected_options)
 st.sidebar.checkbox("Expert mode")
 
 selected_weight = st.sidebar.select_slider("Which class of vehicle (metric tons)", [10, 20, 40], 40)
+selected_country = st.sidebar.selectbox("Select the country", eu_country_cost["GEO (Labels)"], 14)
+selected_price = eu_country_cost.loc[eu_country_cost["GEO (Labels)"] == selected_country, "Electricity price 2019 S-2"].item()
 
 selected_year = st.sidebar.select_slider("What year", [2020, 2025, 2030, 2040, 2050], 2025)
 
@@ -78,6 +81,7 @@ st.sidebar.write("Models and assumptions for long-haul trucks (40 t) are based o
 
 
 # main app
+
 
 container = st.container()
 container.title('TCO-Calculator for different Green Trucking Technologies')
@@ -133,7 +137,10 @@ with container2.expander("Energy Cost"):
     for i in range(num_options):
         with cols[i]:
             st.subheader(selected_options[i])
-            en_cost.loc[(en_cost["Vehicle"] == selected_options[i]) & (en_cost["Year"] == selected_year), "Cost"] = st.number_input("Energy/fuel cost [" + energy_cost.loc[(energy_cost["Vehicle"] == selected_options[i]) & (energy_cost["Year"] == selected_year), "Unit"].item() + "]", float(0), float(10), energy_cost.loc[(energy_cost["Vehicle"] == selected_options[i]) & (energy_cost["Year"] == selected_year), "Cost"].item(), 0.025, key="ec"+str(i))
+            if (selected_options[i] == "BEV" or selected_options[i] == "OC-BEV") and selected_country != "Germany":
+                en_cost.loc[(en_cost["Vehicle"] == selected_options[i]) & (en_cost["Year"] == selected_year), "Cost"] = st.number_input("Energy/fuel cost [€/kWh]", float(0), float(1), selected_price, 0.01, key="ectg"+str(i))
+            else:
+                en_cost.loc[(en_cost["Vehicle"] == selected_options[i]) & (en_cost["Year"] == selected_year), "Cost"] = st.number_input("Energy/fuel cost [" + energy_cost.loc[(energy_cost["Vehicle"] == selected_options[i]) & (energy_cost["Year"] == selected_year), "Unit"].item() + "]", float(0), float(10), energy_cost.loc[(energy_cost["Vehicle"] == selected_options[i]) & (energy_cost["Year"] == selected_year), "Cost"].item(), 0.025, key="ec"+str(i))
 
             if en_cost.loc[(en_cost["Vehicle"] == selected_options[i]) & (en_cost["Year"] == selected_year), "Unit"].item() == "€/l Diesel":
 
@@ -204,5 +211,5 @@ fig.update_layout(font_size = 15, title_x=0.5)
 container.write(fig)
 
 st.subheader("Sources")
-st.markdown("Eurostat (2021). [Electricity prices for non-household consumers - bi-annual data (from 2007 onwards)](https://ec.europa.eu/eurostat/databrowser/view/NRG_PC_205__custom_1376243/default/table?lang=en)\n\nTransport & Environment (2021). [How to decarbonise long-haul trucking in Germany. An analysis of available vehicle technologies and their associsated costs.](https://www.transportenvironment.org/wp-content/uploads/2021/07/2021_04_TE_how_to_decarbonise_long_haul_trucking_in_Germany_final.pdf)")
+st.markdown("Eurostat (2021). [Electricity prices for non-household consumers - bi-annual data (from 2007 onwards)](https://ec.europa.eu/eurostat/databrowser/view/NRG_PC_205__custom_1376243/default/table?lang=en)\n\nWorldbank (2021). [Carbon Pricing Dashboard](https://carbonpricingdashboard.worldbank.org)\n\nTransport & Environment (2021). [How to decarbonise long-haul trucking in Germany. An analysis of available vehicle technologies and their associsated costs.](https://www.transportenvironment.org/wp-content/uploads/2021/07/2021_04_TE_how_to_decarbonise_long_haul_trucking_in_Germany_final.pdf)")
 
