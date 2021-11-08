@@ -27,7 +27,7 @@ share_tollable_road = 0.9
 
 ################################ CODE #####################################
 ################################################################################
-st.set_page_config(page_title=None, page_icon=None, initial_sidebar_state='expanded')
+st.set_page_config(page_title="TCO Comparison Green Trucking", page_icon=None, initial_sidebar_state='expanded')
 
 #caching for better performance
 @st.cache
