@@ -200,7 +200,7 @@ cost_e.reset_index(inplace=True)
 cost = cost_e
 cost = cost.loc[(cost["Year"] == selected_year) & (cost["Vehicle"].isin(selected_options))]
 cost["Cost type"] = cost["Cost type"].replace({'Purchase cost':'Vehicle'})
-fig = px.bar(cost, x="Vehicle", y="Cost [€]",  color="Cost type",  hover_name="Vehicle", hover_data= ["Share of TCO"],color_discrete_sequence=px.colors.qualitative.T10, title="Total cost of ownership 40 ton truck in first "+str(num_years)+" year use period<br><sup>Base year "+str(selected_year) +", " + str(yearly_mileage)+ " yearly mileage, excluding driver costs</sup>")
+fig = px.bar(cost, x="Vehicle", y="Cost [€]",  color="Cost type",  hover_name="Vehicle", hover_data= ["Share of TCO"],color_discrete_sequence=px.colors.qualitative.T10, title="Total cost of ownership 40 ton truck in first "+str(num_years)+" year use period<br><sup>Base year "+str(selected_year) +", " + str(yearly_mileage)+ " km yearly mileage, excluding driver costs</sup>")
 
 fig.update_xaxes(categoryorder='array', categoryarray= selected_options)
 fig.update_layout(font_size = 15, title_x=0.5)
