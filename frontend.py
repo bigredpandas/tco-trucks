@@ -68,15 +68,13 @@ st.sidebar.title('Pre-Settings')
 selected_options = st.sidebar.multiselect("Which technologies would you like to compare", ["ICEV","BEV","FCEV","OC-BEV"],["BEV", "FCEV", "ICEV"], format_func=lambda x: options.get(x))
 num_options = len(selected_options)
 
-st.sidebar.checkbox("Expert mode")
 
-selected_weight = st.sidebar.select_slider("Which class of vehicle (metric tons)", [10, 20, 40], 40)
 selected_country = st.sidebar.selectbox("Select the country", eu_country_cost["GEO (Labels)"], 14)
 selected_price = eu_country_cost.loc[eu_country_cost["GEO (Labels)"] == selected_country, "Electricity price 2019 S-2"].item()
 
 selected_year = st.sidebar.select_slider("What year", [2020, 2025, 2030, 2040, 2050], 2025)
 
-st.sidebar.write("Models and assumptions for long-haul trucks (40 t) are based on: *Transport & Environment (2021). [How to decarbonise long-haul trucking in Germany. An analysis of available vehicle technologies and their associsated costs.](https://www.transportenvironment.org/wp-content/uploads/2021/07/2021_04_TE_how_to_decarbonise_long_haul_trucking_in_Germany_final.pdf)*  \n\n Assumptions for 22 and 7.5 t vehicles are based on market feedback\n\nFor Feeback hit me up on [LinkedIn](https://www.linkedin.com/in/jan-biederbeck/) or email (trucks@jan-biederbeck.de).  \n Source Code can be found on [GitHub](https://github.com/bigredpandas/tco-trucks).")
+st.sidebar.write("Models and assumptions for long-haul trucks (40 t) are based on: *Transport & Environment (2021). [How to decarbonise long-haul trucking in Germany. An analysis of available vehicle technologies and their associsated costs.](https://www.transportenvironment.org/wp-content/uploads/2021/07/2021_04_TE_how_to_decarbonise_long_haul_trucking_in_Germany_final.pdf)*")
 
 
 
@@ -202,7 +200,7 @@ cost_e.reset_index(inplace=True)
 cost = cost_e
 cost = cost.loc[(cost["Year"] == selected_year) & (cost["Vehicle"].isin(selected_options))]
 cost["Cost type"] = cost["Cost type"].replace({'Purchase cost':'Vehicle'})
-fig = px.bar(cost, x="Vehicle", y="Cost [€]",  color="Cost type",  hover_name="Vehicle", hover_data= ["Share of TCO"],color_discrete_sequence=px.colors.qualitative.T10, title="Total cost of ownership in first "+str(num_years)+" year use period<br><sup>Base year "+str(selected_year) +", excluding driver costs</sup>")
+fig = px.bar(cost, x="Vehicle", y="Cost [€]",  color="Cost type",  hover_name="Vehicle", hover_data= ["Share of TCO"],color_discrete_sequence=px.colors.qualitative.T10, title="Total cost of ownership 40 ton truck in first "+str(num_years)+" year use period<br><sup>Base year "+str(selected_year) +", " + str(yearly_mileage)+ " yearly mileage, excluding driver costs</sup>")
 
 fig.update_xaxes(categoryorder='array', categoryarray= selected_options)
 fig.update_layout(font_size = 15, title_x=0.5)
