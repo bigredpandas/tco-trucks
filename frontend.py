@@ -70,11 +70,12 @@ num_options = len(selected_options)
 
 
 selected_country = st.sidebar.selectbox("Select the country", eu_country_cost["GEO (Labels)"], 14)
-selected_price = eu_country_cost.loc[eu_country_cost["GEO (Labels)"] == selected_country, "Electricity price 2019 S-2"].item()
 
+selected_price = eu_country_cost.loc[eu_country_cost["GEO (Labels)"] == selected_country, "Electricity price 2019 S-2"].item()
+st.sidebar.write('Baseline is Germany, for other countries just electricity prices are updated (tolls, hydrogen price assumed to be same as Germany, which is of course not true)')
 selected_year = st.sidebar.select_slider("What year", [2020, 2025, 2030, 2040, 2050], 2025)
 
-st.sidebar.write("Models and assumptions for long-haul trucks (40 t) are based on: *Transport & Environment (2021). [How to decarbonise long-haul trucking in Germany. An analysis of available vehicle technologies and their associsated costs.](https://www.transportenvironment.org/wp-content/uploads/2021/07/2021_04_TE_how_to_decarbonise_long_haul_trucking_in_Germany_final.pdf)*")
+st.sidebar.write("Models and assumptions are based on: *Transport & Environment (2021). [How to decarbonise long-haul trucking in Germany. An analysis of available vehicle technologies and their associsated costs.](https://www.transportenvironment.org/wp-content/uploads/2021/07/2021_04_TE_how_to_decarbonise_long_haul_trucking_in_Germany_final.pdf)*")
 
 
 
