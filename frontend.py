@@ -210,5 +210,5 @@ fig.update_layout(font_size = 15, title_x=0.5)
 container.write(fig)
 
 st.subheader("Sources")
-st.markdown("Eurostat (2021). [Electricity prices for non-household consumers - bi-annual data (from 2007 onwards)](https://ec.europa.eu/eurostat/databrowser/view/NRG_PC_205__custom_1376243/default/table?lang=en)\n\nWorldbank (2021). \n\nTransport & Environment (2021). [How to decarbonise long-haul trucking in Germany. An analysis of available vehicle technologies and their associsated costs.](https://www.transportenvironment.org/wp-content/uploads/2021/07/2021_04_TE_how_to_decarbonise_long_haul_trucking_in_Germany_final.pdf)")
+st.markdown("Eurostat (2021). [Electricity prices for non-household consumers - bi-annual data (from 2007 onwards)](https://ec.europa.eu/eurostat/databrowser/view/NRG_PC_205__custom_1376243/default/table?lang=en) \n\nTransport & Environment (2021). [How to decarbonise long-haul trucking in Germany. An analysis of available vehicle technologies and their associsated costs.](https://www.transportenvironment.org/wp-content/uploads/2021/07/2021_04_TE_how_to_decarbonise_long_haul_trucking_in_Germany_final.pdf)")
 
