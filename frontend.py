@@ -212,4 +212,4 @@ container.write(fig)
 st.subheader("Sources")
 st.markdown("Eurostat (2021). [Electricity prices for non-household consumers - bi-annual data (from 2007 onwards)](https://ec.europa.eu/eurostat/databrowser/view/NRG_PC_205__custom_1376243/default/table?lang=en) \n\nTransport & Environment (2021). [How to decarbonise long-haul trucking in Germany. An analysis of available vehicle technologies and their associsated costs.](https://www.transportenvironment.org/wp-content/uploads/2021/07/2021_04_TE_how_to_decarbonise_long_haul_trucking_in_Germany_final.pdf)")
 
-st.markdown("Angaben gemäß § 5 TMG: \n\nJan Biederbeck \n\nKronenstraße 56 \n\n40217 Düsseldorf \n\n \n\nKontakt: \n\nMail: impressum [klammeraffe] jan-biederbeck [punkt] de \n\n \n\nVerantwortlich für den Inhalt nach § 55 Abs. 2 RStV: \n\nJan Biederbeck \n\nKronenstraße 56 \n\n40217 Düsseldorf")
+st.markdown(" \n\n \n\nAngaben gemäß § 5 TMG: \n\nJan Biederbeck \n\nKronenstraße 56 \n\n40217 Düsseldorf \n\n \n\nKontakt: \n\nMail: impressum [klammeraffe] jan-biederbeck [punkt] de \n\n \n\nVerantwortlich für den Inhalt nach § 55 Abs. 2 RStV: \n\nJan Biederbeck \n\nKronenstraße 56 \n\n40217 Düsseldorf")
